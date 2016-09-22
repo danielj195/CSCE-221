@@ -38,11 +38,13 @@ public:
 class ShellSort:public Sort {		// ShellSort class
 public:
   void sort(int A[], int size);		// main entry point
+  inline int next_space(int space);
 };
 
 class RadixSort:public Sort {		// RadixSort class
 public:
   void sort(int A[], int size);		// main entry point
 };
+
 
 #endif //SORT_H_

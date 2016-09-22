@@ -44,6 +44,8 @@
 
 using namespace std;
 
+void printOutput (int A[], int size);
+
 /* read input sequence from STDIN */
 int readInput(int A[], int& size) {
    /* read integers to sort */
@@ -152,6 +154,9 @@ int main(int argc, char** argv)
    clock_t finish;
    vector <double> runtimes;
    
+   //ShellSort q;
+   //unsigned long num_cmps = 123;
+   
    double runs = 500; // Change me
    string bar = " <                    >";
    int iteration = 0;
@@ -174,6 +179,10 @@ int main(int argc, char** argv)
          
       /* end timing */
       clock_t finish = clock();
+      
+      printOutput(A, size);
+      //num_cmps = q.getNumCmps();
+      //cout << "Number of computations: " << num_cmps << endl;
       
       // Gets the run times and pushes it to vector
       runtimes.push_back((double)(finish-start)*1000/CLOCKS_PER_SEC); // Adds runtime to vector
@@ -227,4 +236,10 @@ int main(int argc, char** argv)
    // char ch;
    // cin >> ch;
    return 0;
+}
+
+void printOutput (int A[], int size) {
+   for (int i = 0; i < size; i++) {
+      cout << A[i] << endl;
+   }
 }

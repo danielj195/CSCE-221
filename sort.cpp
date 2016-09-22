@@ -35,6 +35,12 @@
 #include "sort.h"
 #include <limits>
 #include <vector>
+#include <math.h>
+#include <stdio.h>
+
+//printf("%c[0m\n", 27); // default color
+//printf("%c[1;31m\n", 27); // red
+
 
 using namespace std;
 
@@ -146,22 +152,56 @@ int main(int argc, char** argv)
    clock_t finish;
    vector <double> runtimes;
    
-   int runs = 10; // Change me
+   double runs = 500; // Change me
+   string bar = " <                    >";
+   int iteration = 0;
    for (int i = 0; i < runs; i++) {
+      float percent = ((i/runs)*100);
+      
+      if (fmod(percent, 5) == 0) { // Increment progress bar by 5%
+         
+         if (percent != 0) {
+            bar.replace(1+iteration,1,"#");
+         }
+            clog << bar << " (" << ((double)i/runs)*100 << "%)\r";
+            iteration++;
+      }
       /* begin timing the chosen algorithm using time.h library*/
       clock_t start = clock();
-      
+         
       /* call sorting function to sort */
       s->sort(A,size);
-      
+         
       /* end timing */
       clock_t finish = clock();
-   //freopen ("/dev/tty", "a", stdout); // Writes to console instead of file
-   
-   // Gets the run times and pushes it to vector
-   runtimes.push_back((double)(finish-start)*1000/CLOCKS_PER_SEC); // Adds runtime to vector
-   clog << "runtime #" << i << ": "<< (double)(finish-start)*1000/CLOCKS_PER_SEC << endl; // Writes to console instead of file
-   //cout << ((double)i/runs)*100 << "%" << endl;
+      
+      // Gets the run times and pushes it to vector
+      runtimes.push_back((double)(finish-start)*1000/CLOCKS_PER_SEC); // Adds runtime to vector
+      
+      /* output sorted sequence */
+      if (op.showOutput()) {
+         cout << "Sorted sequence:" << endl;
+         printArray(A,size); //call global function to display the array
+      }
+      
+      /* show running time of the algorithm to sort input data */
+      if (op.showTime())
+         //cout << "runtime #" << i << ": "<< (double)(finish-start)*1000/CLOCKS_PER_SEC << " ms"<< endl; // Writes to console instead of file
+         cout << "Running time: "
+              << (double)(finish-start)*1000/CLOCKS_PER_SEC
+              << " ms" << endl;
+         //cout << "FINISH: " << finish << " & START " << start << endl; 
+
+      /* show number of comparisons in the algorithm */
+      if (op.showNumCmps()) {
+         if (radixsortQ) {
+            cout << "No comparisons for radix sort"
+                 << endl;
+         } else {
+            cout << "# Comparisons: "
+                 << s->getNumCmps() << endl;
+         }
+      }
    }
    
    double sum = 0;
@@ -169,36 +209,14 @@ int main(int argc, char** argv)
       sum += runtimes.at(i);
    }
    double average  = sum / runs;
-   clog << "Average = " << average << endl;
    
-   if ((output_file=op.getOutputFile()) &&
-       freopen(output_file, "w", stdout) == 0) {
-      cerr << "sort: " << output_file << ": No such file" << endl;
-      return 1; //exit abnormally
-      }
-   
-   /* output sorted sequence */
    if (op.showOutput()) {
-      cout << "Sorted sequence:" << endl;
-      printArray(A,size); //call global function to display the array
+      cout << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << average << " ms" <<endl;
+   } else {
+      clog << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << average << " ms" <<endl;
+      cout << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << average << " ms" <<endl;
    }
    
-   /* show running time of the algorithm to sort input data */
-   if (op.showTime())
-      cout << "Running time: "
-           << (double)(finish-start)*1000/CLOCKS_PER_SEC
-           << " ms" << endl;
-
-   /* show number of comparisons in the algorithm */
-   if (op.showNumCmps()) {
-      if (radixsortQ) {
-         cout << "No comparisons for radix sort"
-              << endl;
-      } else {
-         cout << "# Comparisons: "
-              << s->getNumCmps() << endl;
-      }
-   }
 
    if (!s->testIfSorted(A, size)) {
       cerr << "Warning: The sorted sequence IS NOT sorted!\n"

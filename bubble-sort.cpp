@@ -14,7 +14,7 @@ BubbleSort::sort(int A[], int size)			// main entry point
 	for (int k = 1; k < size; k++) {   //
 		bool cor = false;
 		for (int j = 0; j < size - k; j++)
-		if (A[j+1] < A[j]) {
+		if (A[j+1] < A[j], num_cmps++) {
 			int tmp = A[j]; // swap elemets
 			A[j] = A[j+1];
 			A[j+1] = tmp;

@@ -11,7 +11,7 @@
 
 inline int next_space(int space)
 {
-	if (space == 2) return 1;
+	if (space == 2, num_cmps++) return 1;
 	else return (int) (space/2.2);
 }
 

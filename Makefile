@@ -1,14 +1,15 @@
 # a simple makefile for compiling C++ files
 
-CC= g++-4.7 -std=c++11
+CC= g++ -std=c++11
 
-all: sort
+# make all
+all: sort generate-numbers
 
+#make sort
 sort: bubble-sort.o insertion-sort.o selection-sort.o shell-sort.o \
-option.o sort.o radix-sort.o
+option.o sort.o radix-sort.o 
 	$(CC) -o sort bubble-sort.o insertion-sort.o selection-sort.o \
 	       shell-sort.o option.o sort.o radix-sort.o
-
 option.o: option.h option.cpp
 	$(CC) -c option.cpp
 
@@ -29,6 +30,14 @@ radix-sort.o: sort.h radix-sort.cpp
 
 sort.o: sort.h option.h sort.cpp
 	$(CC) -c sort.cpp
+
+# make generate-numbers
+
+generate-numbers: 
+generate-numbers.o: generate-numbers.cpp
+	$(CC) -c generate-numbers.cpp
+
+# make clean
 
 clean:
 	/bin/rm -f *.o sort

@@ -73,6 +73,14 @@ bool Sort::testIfSorted(int A[], int size)
 
 int main(int argc, char** argv)
 {
+   double runs = 1000; // Change me
+   string numberCount = "500"; // Change me
+   string order = "D"; // Change me
+   string negative = "-n"; // Change me
+   string seed = "1";
+   string command = "./generate-numbers " + numberCount + " -o " + order + " " + negative;
+   system((command).c_str());
+
    Option op;
    bool radixsortQ = false;
    
@@ -149,13 +157,7 @@ int main(int argc, char** argv)
    clock_t finish;
    vector <double> runtimes;
    vector <int> comparisons;
-   
-   double runs = 1000; // Change me
-   string numberCount = "100"; // Change me
-   string order = "R"; // Change me
-   string negative = "-n"; // Change me
-   string seed = "1";
-   string command = "./generate-numbers " + numberCount + " -o " + order + " " + negative;
+  
    //clog << "command: " << command << endl;
    string bar = " <                    >";
    int iteration = 0;

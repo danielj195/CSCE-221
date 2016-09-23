@@ -11,15 +11,19 @@
 void 
 BubbleSort::sort(int A[], int size)			// main entry point
 {
-	for (int k = 1; k < size; k++) {   //
-		bool cor = false;
-		for (int j = 0; j < size - k; j++)
-		if (A[j+1] < A[j], num_cmps++) {
-			int tmp = A[j]; // swap elemets
-			A[j] = A[j+1];
-			A[j+1] = tmp;
-			cor = true;
+	bool cor = true;
+	int j = 0;
+	int tmp;
+	while (cor) {
+		cor = false;
+		j++;
+		for (int i = 0; i < size - j; i++) {
+			if (A[i] > A[i + 1]) {
+				tmp = A[i];
+				A[i] = A[i + 1];
+				A[i + 1] = tmp;
+				cor = true;
+			}
 		}
-		if (!cor) break; // stop sorting
 	}
 }

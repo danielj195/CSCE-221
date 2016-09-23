@@ -27,7 +27,7 @@ void RadixSort::sort(int A[], int size)
 	for (int exp = 1; m/exp > 0; exp *= 10) {
 		sortMinToMax(A, size, exp*10);
 	}
-	print (A, size);
+	//print (A, size);
 }
 
 void print (int A[], int size) {

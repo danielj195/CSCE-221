@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 	size++; // because 1st value holds the amount of numbers
 	int A[size];
 	generateNumbers (A, size, negative, order);
-	print(A, size);
+	//print(A, size);
 	writeFile(A, size, "input.txt");
 }
 

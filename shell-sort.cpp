@@ -11,7 +11,9 @@
 
 inline int ShellSort::next_space(int space)
 {
+  //std::clog << "BEFORE" << std::endl;
   if (space == 2) {
+    //std::clog << "INSIDE" << std::endl;
     num_cmps++;
     return 1;
   }

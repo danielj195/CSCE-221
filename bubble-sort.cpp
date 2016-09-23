@@ -8,8 +8,7 @@
 
 #include "sort.h"
 
-void 
-BubbleSort::sort(int A[], int size)			// main entry point
+void BubbleSort::sort(int A[], int size)			// main entry point
 {
 	bool cor = true;
 	int j = 0;

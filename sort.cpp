@@ -154,10 +154,8 @@ int main(int argc, char** argv)
    string numberCount = "100"; // Change me
    string order = "I"; // Change me
    string negative = ""; // Change me
-   string pwd = exec("pwd");
    string space = " ";
    string seed = "1";
-   pwd.replace(pwd.find(space),space.length(),"\\ ");
    string command = "./generate-numbers " + numberCount + " -o " + order + " " + negative;
    //clog << "command: " << command << endl;
    string bar = " <                    >";
@@ -276,16 +274,4 @@ void printOutput (int A[], int size) {
    for (int i = 1; i < size; i++) {
       cout << A[i] << endl;
    }
-}
-
-string exec(const char* cmd) {
-   char buffer[128];
-   string result = "";
-   shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
-   if (!pipe) throw runtime_error("popen() failed!");
-   while (!feof(pipe.get())) {
-      if (fgets(buffer, 128, pipe.get()) != NULL)
-         result += buffer;
-   }
-   return result;
 }

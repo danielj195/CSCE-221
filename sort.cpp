@@ -150,11 +150,10 @@ int main(int argc, char** argv)
    vector <double> runtimes;
    vector <int> comparisons;
    
-   double runs = 100; // Change me
+   double runs = 1000; // Change me
    string numberCount = "100"; // Change me
-   string order = "I"; // Change me
-   string negative = ""; // Change me
-   string space = " ";
+   string order = "R"; // Change me
+   string negative = "-n"; // Change me
    string seed = "1";
    string command = "./generate-numbers " + numberCount + " -o " + order + " " + negative;
    //clog << "command: " << command << endl;

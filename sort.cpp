@@ -38,6 +38,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -150,14 +151,14 @@ int main(int argc, char** argv)
    vector <int> comparisons;
    
    double runs = 100; // Change me
-   string numberCount = "1000"; // Change me
-   string order = "R"; // Change me
-   string negative = "-n"; // Change me
+   string numberCount = "100"; // Change me
+   string order = "I"; // Change me
+   string negative = ""; // Change me
    string pwd = exec("pwd");
    string space = " ";
    string seed = "1";
    pwd.replace(pwd.find(space),space.length(),"\\ ");
-   string command = "cd; cd " + pwd + " ./generate-numbers " + numberCount + " -o " + order + " " + negative;
+   string command = "./generate-numbers " + numberCount + " -o " + order + " " + negative;
    //clog << "command: " << command << endl;
    string bar = " <                    >";
    int iteration = 0;
@@ -250,16 +251,18 @@ int main(int argc, char** argv)
    
    if (op.showOutput()) {
       cout << "--------------------------------------------------------------------------------" << endl;
-      cout << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << runAverage << " ss" << endl;
+      cout << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << runAverage << " ms" << endl;
       cout << "Average #comparisons after " << runs << " runs sorting " << size << " numbers = " << compAverage << endl;
       cout << "--------------------------------------------------------------------------------" << endl;
    } else {
       clog << "--------------------------------------------------------------------------------" << endl;
-      clog << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << runAverage << " ss" << endl;
+      clog << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << runAverage << " ms" << endl;
       clog << "Average #comparisons after " << runs << " runs sorting " << size << " numbers = " << compAverage << endl;
       clog << "--------------------------------------------------------------------------------" << endl;
+      cout << "--------------------------------------------------------------------------------" << endl;
       cout << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << runAverage << " ms" << endl;
       cout << "Average #comparisons after " << runs << " runs sorting " << size << " numbers = " << compAverage << endl;
+      cout << "--------------------------------------------------------------------------------" << endl;
       
    }
 

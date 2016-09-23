@@ -11,22 +11,23 @@ void altPrint(int A[], int size);
 void printFile (int A[], int size, ofstream& file);
 void printUsageInfo(const string& name);
 void checkArguments(int argc, char *argv[]);
-void parseArguments(int argc, char *argv[], bool &negative, char &order);
-void generateNumbers (int A[], int size, const bool &negative, const char &order);
+void parseArguments(int argc, char *argv[], bool &negative, char &order, int &seed);
+void generateNumbers (int A[], int size, const bool &negative, const char &order, const int &seed);
 void sortIncreasing(int A[], int size);
 void sortDecreasing(int A[], int size);
 
 int main(int argc, char *argv[]) {
 	bool negative = false;
 	char order = 'X';
+	int seed = 1;
 	checkArguments(argc, argv); // Checks to see if the arguments make sense
-	parseArguments(argc, argv, negative, order); // Scans for flags
+	parseArguments(argc, argv, negative, order, seed); // Scans for flags
 	if (order == 'X') { printUsageInfo("generate-numbers"); exit(0); }
 	//cout << "ORDER = " << order << endl;
 	int size = atoi(argv[1]);
 	size++; // because 1st value holds the amount of numbers
 	int A[size];
-	generateNumbers (A, size, negative, order);
+	generateNumbers (A, size, negative, order, seed);
 	//print(A, size);
 	writeFile(A, size, "input.txt");
 }
@@ -53,14 +54,16 @@ void writeFile(int A[], int size, string fileName) {
 
 void printUsageInfo(const string& name)
 {
-		cout << "Usage: ./" << name << " number [-n] [-o ORDER]...\n"
+		cout << "Usage: ./" << name << " number [-n] [-s SEED] [-o ORDER]...\n"
 		//cout << "NOTE:\tFirst argument must be the amount of numbers to be generated" << endl;
 		"Options:\n"
 		"  -n\tAllows negative numbers to be generated\n"
+		"  -s\tAllows user to input seed\n"
 		"  -o\tORDER is a single character representing an the type of order: \n"
 		"     R   (Random)\n"
 		"     I   (Increasing)\n"
 		"     D   (Decreasing)\n";
+		
 }
 
 void checkArguments(int argc, char *argv[]) {
@@ -79,7 +82,7 @@ void checkArguments(int argc, char *argv[]) {
 	}
 }
 
-void parseArguments(int argc, char *argv[], bool &negative, char &order) {
+void parseArguments(int argc, char *argv[], bool &negative, char &order, int &seed) {
 	for (int i = 2; i < argc; i++)
 	{
 		char* p = argv[i];
@@ -92,15 +95,16 @@ void parseArguments(int argc, char *argv[], bool &negative, char &order) {
 		switch (p[1]) // switch on whatever comes after dash
 		{
 			case 'o': if (i+1 < argc) order = argv[++i][0]; break;
+			case 's': if (i+1 < argc) seed = argv[++i][0]; break;
 			case 'n': negative   = true; break;
 			default: printUsageInfo("generate-numbers");exit(0); break;
 		}
 	}
 }
 
-void generateNumbers (int A[], int size, const bool &negative, const char &order) {
+void generateNumbers (int A[], int size, const bool &negative, const char &order, const int &seed) {
+	srand(time(NULL)*seed);
 	if (order == 'R') {
-		srand(time(NULL));
 		A[0] = size-1;
 		for (int i = 1; i < size; i++) {
 			int value;
@@ -118,7 +122,6 @@ void generateNumbers (int A[], int size, const bool &negative, const char &order
 			A[i] = value;
 		}
 	} else if (order == 'I') {
-		srand(time(NULL));
 		//srand(1);
 		A[0] = size-1;
 		for (int i = 1; i < size; i++) {
@@ -161,7 +164,6 @@ void generateNumbers (int A[], int size, const bool &negative, const char &order
 			}
 		}*/
 	} else if (order == 'D') {
-		srand(time(NULL));
 		//srand(1);
 		A[0] = size-1;
 		for (int i = 1; i < size; i++) {

@@ -37,14 +37,9 @@
 #include <vector>
 #include <math.h>
 #include <stdio.h>
-
-//printf("%c[0m\n", 27); // default color
-//printf("%c[1;31m\n", 27); // red
-
+#include <unistd.h>
 
 using namespace std;
-
-void printOutput (int A[], int size);
 
 /* read input sequence from STDIN */
 int readInput(int A[], int& size) {
@@ -66,7 +61,7 @@ void printArray(const int A[], int size) {
    cout << endl;  
 }
 
-// returns true if sorted as increasing sequence
+// returns true if sorted as increasing or sequence
 // returns false otherwise
 bool Sort::testIfSorted(int A[], int size)
 {
@@ -102,7 +97,7 @@ int main(int argc, char** argv)
       so that we only need to deal with standard input. */
    if ((input_file=op.getInputFile()) &&
        freopen(input_file, "r", stdin) == 0) {
-      cerr << "sort: " << input_file << ": no such file" << endl;
+      cerr << "sort: " << input_file << ": no such input file" << endl;
       return 1;
    }
    
@@ -110,7 +105,7 @@ int main(int argc, char** argv)
       so that we only need to deal with standard output. */
    if ((output_file=op.getOutputFile()) &&
        freopen(output_file, "w", stdout) == 0) {
-      cerr << "sort: " << output_file << ": No such file" << endl;
+      cerr << "sort: " << output_file << ": No such output file" << endl;
       return 1; //exit abnormally
    }
   
@@ -128,7 +123,6 @@ int main(int argc, char** argv)
       cout << "Unsorted sequence:" << endl;
       printArray(A,size); //call global function to display the array
    }
-  
    /* create an sorting object with appropriate algorithm */
    Sort* s;
    switch(op.getAlg()) 
@@ -153,23 +147,45 @@ int main(int argc, char** argv)
    clock_t start;
    clock_t finish;
    vector <double> runtimes;
+   vector <int> comparisons;
    
-   //ShellSort q;
-   //unsigned long num_cmps = 123;
-   
-   double runs = 500; // Change me
+   double runs = 100; // Change me
+   string numberCount = "1000"; // Change me
+   string order = "R"; // Change me
+   string negative = "-n"; // Change me
+   string pwd = exec("pwd");
+   string space = " ";
+   string seed = "1";
+   pwd.replace(pwd.find(space),space.length(),"\\ ");
+   string command = "cd; cd " + pwd + " ./generate-numbers " + numberCount + " -o " + order + " " + negative;
+   //clog << "command: " << command << endl;
    string bar = " <                    >";
    int iteration = 0;
    for (int i = 0; i < runs; i++) {
+      //clog << "i: " << i+1 << endl;
+      system((command + " -s " + to_string(i % 15)).c_str());
+      if ((input_file=op.getInputFile()) &&
+          freopen(input_file, "r", stdin) == 0) {
+         cerr << "sort: " << input_file << ": no such input file" << endl;
+         return 1;
+      }
+      if (!(cin >> size)) {
+         exit(0);
+         return 1; //exit abnormally
+      }
+      if (readInput(A,size)) { //call global function
+         exit(0);
+         return 1; //exit abnormally
+      }
+      
       float percent = ((i/runs)*100);
       
       if (fmod(percent, 5) == 0) { // Increment progress bar by 5%
-         
          if (percent != 0) {
             bar.replace(1+iteration,1,"#");
          }
-            clog << bar << " (" << ((double)i/runs)*100 << "%)\r";
-            iteration++;
+         clog << bar << " (" << ((double)i/runs)*100 << "%)\r";
+         iteration++;
       }
       /* begin timing the chosen algorithm using time.h library*/
       clock_t start = clock();
@@ -180,13 +196,12 @@ int main(int argc, char** argv)
       /* end timing */
       clock_t finish = clock();
       
-      printOutput(A, size);
-      //num_cmps = q.getNumCmps();
-      //cout << "Number of computations: " << num_cmps << endl;
+      printArray(A,size); //call global function to display the array
       
       // Gets the run times and pushes it to vector
       runtimes.push_back((double)(finish-start)*1000/CLOCKS_PER_SEC); // Adds runtime to vector
-      
+      comparisons.push_back(s->getNumCmps());
+      //clog << "# Comparisons: " << 
       /* output sorted sequence */
       if (op.showOutput()) {
          cout << "Sorted sequence:" << endl;
@@ -195,10 +210,10 @@ int main(int argc, char** argv)
       
       /* show running time of the algorithm to sort input data */
       if (op.showTime())
-         //cout << "runtime #" << i << ": "<< (double)(finish-start)*1000/CLOCKS_PER_SEC << " ms"<< endl; // Writes to console instead of file
+         //clog << "runtime #" << i << ": "<< (double)(finish-start)*1000/CLOCKS_PER_SEC << " ms"<< endl; // Writes to console instead of file
          cout << "Running time: "
               << (double)(finish-start)*1000/CLOCKS_PER_SEC
-              << " ms" << endl;
+              << " s" << endl << ends;
          //cout << "FINISH: " << finish << " & START " << start << endl; 
 
       /* show number of comparisons in the algorithm */
@@ -208,28 +223,44 @@ int main(int argc, char** argv)
                  << endl;
          } else {
             cout << "# Comparisons: "
-                 << s->getNumCmps() << endl;
+                 << s->getNumCmps() << endl << endl;
          }
       }
-   }
+      s->resetNumCmps();
    
-   double sum = 0;
-   for (int i = 0; i < runs; i++) {
-      sum += runtimes.at(i);
+      if (!s->testIfSorted(A, size)) {
+         cerr << "Warning: The sorted sequence IS NOT sorted!\n"
+              << endl;
+      }
    }
-   double average  = sum / runs;
+   clog << "<#####################> (100%)\r";
+   usleep(1000000);
+   
+   double runSum = 0;
+   for (int i = 0; i < runs; i++) {
+      runSum += runtimes.at(i);
+   }
+   double runAverage  = runSum / runs;
+   
+   int compSum = 0;
+   for (int i = 0; i < runs; i++) {
+      compSum += comparisons.at(i);
+   }
+   int compAverage  = compSum / runs;
    
    if (op.showOutput()) {
-      cout << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << average << " ms" <<endl;
+      cout << "--------------------------------------------------------------------------------" << endl;
+      cout << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << runAverage << " ss" << endl;
+      cout << "Average #comparisons after " << runs << " runs sorting " << size << " numbers = " << compAverage << endl;
+      cout << "--------------------------------------------------------------------------------" << endl;
    } else {
-      clog << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << average << " ms" <<endl;
-      cout << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << average << " ms" <<endl;
-   }
-   
-
-   if (!s->testIfSorted(A, size)) {
-      cerr << "Warning: The sorted sequence IS NOT sorted!\n"
-           << endl;
+      clog << "--------------------------------------------------------------------------------" << endl;
+      clog << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << runAverage << " ss" << endl;
+      clog << "Average #comparisons after " << runs << " runs sorting " << size << " numbers = " << compAverage << endl;
+      clog << "--------------------------------------------------------------------------------" << endl;
+      cout << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << runAverage << " ms" << endl;
+      cout << "Average #comparisons after " << runs << " runs sorting " << size << " numbers = " << compAverage << endl;
+      
    }
 
    // it may be useful for Windows
@@ -239,7 +270,19 @@ int main(int argc, char** argv)
 }
 
 void printOutput (int A[], int size) {
-   for (int i = 0; i < size; i++) {
+   for (int i = 1; i < size; i++) {
       cout << A[i] << endl;
    }
+}
+
+string exec(const char* cmd) {
+   char buffer[128];
+   string result = "";
+   shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+   if (!pipe) throw runtime_error("popen() failed!");
+   while (!feof(pipe.get())) {
+      if (fgets(buffer, 128, pipe.get()) != NULL)
+         result += buffer;
+   }
+   return result;
 }

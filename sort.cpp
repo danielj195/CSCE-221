@@ -73,10 +73,10 @@ bool Sort::testIfSorted(int A[], int size)
 
 int main(int argc, char** argv)
 {
-   double runs = 1000; // Change me
-   string numberCount = "500"; // Change me
+   double runs = 10; // Change me
+   string numberCount = "2000"; // Change me
    string order = "D"; // Change me
-   string negative = "-n"; // Change me
+   string negative = ""; // Change me
    string seed = "1";
    string command = "./generate-numbers " + numberCount + " -o " + order + " " + negative;
    system((command).c_str());
@@ -248,20 +248,34 @@ int main(int argc, char** argv)
    }
    int compAverage  = compSum / runs;
    
-   if (op.showOutput()) {
-      cout << "--------------------------------------------------------------------------------" << endl;
-      cout << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << runAverage << " ms" << endl;
-      cout << "Average #comparisons after " << runs << " runs sorting " << size << " numbers = " << compAverage << endl;
-      cout << "--------------------------------------------------------------------------------" << endl;
+   if (order[0] == 'R') {
+      order = "random";
+   } else if (order[0] == 'I'){
+      order = "increasing";
    } else {
-      clog << "--------------------------------------------------------------------------------" << endl;
-      clog << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << runAverage << " ms" << endl;
-      clog << "Average #comparisons after " << runs << " runs sorting " << size << " numbers = " << compAverage << endl;
-      clog << "--------------------------------------------------------------------------------" << endl;
-      cout << "--------------------------------------------------------------------------------" << endl;
-      cout << "Average runtime after " << runs << " runs sorting " << size << " numbers = " << runAverage << " ms" << endl;
-      cout << "Average #comparisons after " << runs << " runs sorting " << size << " numbers = " << compAverage << endl;
-      cout << "--------------------------------------------------------------------------------" << endl;
+      order = "decreasing";
+   }
+   
+   if (negative == "-n") {
+      negative = "(-+)";
+   } else {
+      negative = "(+)";
+   }
+   
+   string output =   "--------------------------------------------------------------------------------\n"
+                     "Average runtime after " + to_string((int)runs) + " runs sorting " + to_string(size) + " " + order + negative +
+                     " numbers = " + to_string(runAverage) + " ms\n" +
+                     "Average #comparisons after " + to_string((int)runs) + " runs sorting " + to_string(size) + " " + order + negative +  
+                     " numbers = " + to_string(compAverage) + "\n" +
+                     "--------------------------------------------------------------------------------\n";
+   
+   ;
+   
+   if (op.showOutput()) {
+      cout << output;
+   } else {
+      clog << output;
+      cout << output;
       
    }
 

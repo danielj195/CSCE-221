@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include <stdexcept>
+#include <vector>
 
 using namespace std;
 
@@ -30,6 +31,10 @@ int main(int argc, char *argv[]) {
 	generateNumbers (A, size, negative, order, seed);
 	//print(A, size);
 	writeFile(A, size, "input.txt");
+}
+
+void run() {
+	
 }
 
 void print (int A[], int size) {
@@ -104,121 +109,28 @@ void parseArguments(int argc, char *argv[], bool &negative, char &order, int &se
 
 void generateNumbers (int A[], int size, const bool &negative, const char &order, const int &seed) {
 	srand(time(NULL)*seed);
+	A[0] = size-1;
+	for (int i = 1; i < size; i++) {
+		int value;
+		if (!negative) { // If only postive integers
+			value = rand() % 65536; // Generates values from 0 to 65535 AKA 0 to 2^16-1
+		}
+		if (negative && (rand()%100)+1 > 50) {
+			value = (rand() % 32768) + 1;
+			value *= -1;
+			// Generates values from -32768 to -1 AKA -(2^15) to -1
+		} else {
+			value = rand() % 32768;
+			 // Generates values from 0 to 32767 AKA 0 to 2^15-1
+		}
+		A[i] = value;
+	}
 	if (order == 'R') {
-		A[0] = size-1;
-		for (int i = 1; i < size; i++) {
-			int value;
-			if (!negative) { // If only postive integers
-				value = rand() % 65536; // Generates values from 0 to 65535 AKA 0 to 2^16-1
-			}
-			if (negative && (rand()%100)+1 > 50) {
-				value = (rand() % 32768) + 1;
-				value *= -1;
-				// Generates values from -32768 to -1 AKA -(2^15) to -1
-			} else {
-				value = rand() % 32768;
-				 // Generates values from 0 to 32767 AKA 0 to 2^15-1
-			}
-			A[i] = value;
-		}
+		
 	} else if (order == 'I') {
-		//srand(1);
-		A[0] = size-1;
-		for (int i = 1; i < size; i++) {
-			int value;
-			if (!negative) { // If only postive integers
-				value = (rand() % 65536/size) + i*(65536/size); // Generates values from 0 to 65535 AKA 0 to 2^16-1
-			}
-			else if (negative && i < (size/2)+1) {
-				value = (rand() % 32768/size) + 1 + i*(32768/size);
-				value *= -1;
-				// Generates values from -32768 to -1 AKA -(2^15) to -1
-				//cout << "OPTION2" << endl;
-			} else {
-				value = (rand() % 32768/size) + i*(32768/size);
-				 // Generates values from 0 to 1 AKA 0 to 2^15-1
-				//cout << "OPTION3" << endl;
-			}
-			A[i] = value;
-		}
-		//print(A, size);
-		//cout << "------------------------" << endl;
-		//cout << "SIZE = " << size << endl;
-		if (negative) {
-			//cout << "((SIZE/2)/2)+1 = " << ((size/2)/2)+1 << endl;
-			for (int i = 1; i < ((size/2)/2)+1; i++) {
-				//altPrint(A, size);
-				int temp = A[i];
-				//cout << "A[size/2-i-1] = " << A[size/2-i+1] << endl;
-				A[i] = A[size/2-i+1];
-				A[size/2-i+1] = temp;
-			}
-		} /*else if (negative) {
-			cout << "(SIZE/2)/2+1 = " << ((size/2)/2)+1 << endl;
-			for (int i = 1; i < ((size/2)/2)+1; i++) {
-				//altPrint(A, size);
-				int temp = A[i];
-				//cout << "A[size/2-i-1] = " << A[size/2-i+1] << endl;
-				A[i] = A[size/2-i+1];
-				A[size/2-i+1] = temp;
-			}
-		}*/
+		sortIncreasing(A, size);
 	} else if (order == 'D') {
-		//srand(1);
-		A[0] = size-1;
-		for (int i = 1; i < size; i++) {
-			int value;
-			if (!negative) { // If only postive integers
-				value = (rand() % 65536/size) + i*(65536/size); // Generates values from 0 to 65535 AKA 0 to 2^16-1
-			}
-			else if (negative && i < (size/2)+1) {
-				value = (rand() % 32768/size) + 1 + i*(32768/size);
-				value *= -1;
-				// Generates values from -32768 to -1 AKA -(2^15) to -1
-				//cout << "OPTION2" << endl;
-			} else {
-				value = (rand() % 32768/size) + i*(32768/size);
-				 // Generates values from 0 to 1 AKA 0 to 2^15-1
-				//cout << "OPTION3" << endl;
-			}
-			A[i] = value;
-		}
-		
-		//print(A, size);
-		//cout << "------------------------" << endl;
-		for (int i = 1; i < (size/2)+1; i++) { // Swaps every element to change from increasing to decreasing
-			int temp = A[i];
-			A[i] = A[size-i];
-			A[size-i] = temp;
-		}
-		
-		//print(A, size);
-		//cout << "------------------------" << endl;
-		//cout << "SIZE = " << size << endl;
-		if (size % 2 == 0 && negative) {
-			//cout << "(SIZE/2) = " << (size/2) << endl;
-			//cout << "SIZE-(SIZE/2)/2 = " << size-((size/2)/2) << endl;
-			int j = 1;
-			for (int i = (size/2); i < size-((size/2)/2); i++) {
-				//altPrint(A, size);
-				int temp = A[i];
-				A[i] = A[size-j];
-				A[size-j] = temp;
-				j++;
-			}
-		}
-		else if (negative) {
-			//cout << "(SIZE/2)+1 = " << (size/2)+1 << endl;
-			//cout << "SIZE-(SIZE/2)/2 = " << size-((size/2)/2) << endl;
-			int j = 1;
-			for (int i = (size/2)+1; i < size-((size/2)/2); i++) {
-				//altPrint(A, size);
-				int temp = A[i];
-				A[i] = A[size-j];
-				A[size-j] = temp;
-				j++;
-			}
-		}
+		sortDecreasing(A, size);
 	}
 	
 }

@@ -163,15 +163,15 @@ int main(int argc, char** argv)
    int iteration = 0;
    for (int i = 0; i < runs; i++) {
       //clog << "i: " << i+1 << endl;
-      clog << "GENERATING NUMBERS\r" << endl;
+      clog << "GENERATING NUMBERS\r";
       system((command + " -s " + to_string(i % 15)).c_str());
-      clog << "CHECKING INPUT FILE\r" << endl;
+      clog << "CHECKING INPUT FILE\r";
       if ((input_file=op.getInputFile()) &&
           freopen(input_file, "r", stdin) == 0) {
          cerr << "sort: " << input_file << ": no such input file" << endl;
          return 1;
       }
-      clog << "READING INPUT FILE\r" << endl;
+      clog << "READING INPUT FILE\r";
       if (!(cin >> size)) {
          exit(0);
          return 1; //exit abnormally

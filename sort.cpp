@@ -73,13 +73,13 @@ bool Sort::testIfSorted(int A[], int size)
 
 int main(int argc, char** argv)
 {
-   double runs = 10; // Change me
-   string numberCount = "2000"; // Change me
-   string order = "D"; // Change me
-   string negative = ""; // Change me
+   double runs = 1; // Change me
+   string numberCount = "100000"; // Change me
+   string order = "R"; // Change me
+   string negative = "-n"; // Change me
    string seed = "1";
    string command = "./generate-numbers " + numberCount + " -o " + order + " " + negative;
-   system((command).c_str());
+   //system((command).c_str());
 
    Option op;
    bool radixsortQ = false;
@@ -124,8 +124,8 @@ int main(int argc, char** argv)
     
    /* read input integers */
    int* A=new int[size]; //stores integers  
-   if (readInput(A,size)) //call global function
-      return 1; //exit abnormally
+   //if (readInput(A,size)) //call global function
+   //   return 1; //exit abnormally
 
    /* show unsorted input sequence */
    if (op.showInput()) {
@@ -163,12 +163,15 @@ int main(int argc, char** argv)
    int iteration = 0;
    for (int i = 0; i < runs; i++) {
       //clog << "i: " << i+1 << endl;
+      clog << "GENERATING NUMBERS\r" << endl;
       system((command + " -s " + to_string(i % 15)).c_str());
+      clog << "CHECKING INPUT FILE\r" << endl;
       if ((input_file=op.getInputFile()) &&
           freopen(input_file, "r", stdin) == 0) {
          cerr << "sort: " << input_file << ": no such input file" << endl;
          return 1;
       }
+      clog << "READING INPUT FILE\r" << endl;
       if (!(cin >> size)) {
          exit(0);
          return 1; //exit abnormally
@@ -177,6 +180,7 @@ int main(int argc, char** argv)
          exit(0);
          return 1; //exit abnormally
       }
+      
       
       float percent = ((i/runs)*100);
       

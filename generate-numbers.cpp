@@ -115,7 +115,7 @@ void generateNumbers (int A[], int size, const bool &negative, const char &order
 		if (!negative) { // If only postive integers
 			value = rand() % 65536; // Generates values from 0 to 65535 AKA 0 to 2^16-1
 		}
-		if (negative && (rand()%100)+1 > 50) {
+		if (negative && i < size/2) {
 			value = (rand() % 32768) + 1;
 			value *= -1;
 			// Generates values from -32768 to -1 AKA -(2^15) to -1
@@ -125,6 +125,7 @@ void generateNumbers (int A[], int size, const bool &negative, const char &order
 		}
 		A[i] = value;
 	}
+	
 	if (order == 'R') {
 		
 	} else if (order == 'I') {

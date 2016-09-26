@@ -27,6 +27,7 @@ SelectionSort::sort(int A[], int size){
 				int tmp = A[k]; // swap A[k] and A[index]
 				A[k] = A[index]; // k first index
 				A[index] = tmp;
+				num_cmps++;
 			}
 		}
 }

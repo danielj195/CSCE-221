@@ -73,10 +73,10 @@ bool Sort::testIfSorted(int A[], int size)
 
 int main(int argc, char** argv)
 {
-   double runs = 1; // Change me
-   string numberCount = "100000"; // Change me
-   string order = "R"; // Change me
-   string negative = "-n"; // Change me
+   double runs = 4; //				 	CHANGE ME
+   string numberCount = "100000"; // 	CHANGE ME
+   string order = "D"; //				CHANGE ME
+   string negative = ""; // 			CHANGE ME
    string seed = "1";
    string command = "./generate-numbers " + numberCount + " -o " + order + " " + negative;
    //system((command).c_str());
@@ -156,7 +156,7 @@ int main(int argc, char** argv)
    clock_t start;
    clock_t finish;
    vector <double> runtimes;
-   vector <int> comparisons;
+   vector <unsigned long long> comparisons;
   
    //clog << "command: " << command << endl;
    string bar = " <                    >";
@@ -246,11 +246,11 @@ int main(int argc, char** argv)
    }
    double runAverage  = runSum / runs;
    
-   int compSum = 0;
+   unsigned long long compSum = 0;
    for (int i = 0; i < runs; i++) {
       compSum += comparisons.at(i);
    }
-   int compAverage  = compSum / runs;
+   unsigned long long compAverage  = compSum / runs;
    
    if (order[0] == 'R') {
       order = "random";

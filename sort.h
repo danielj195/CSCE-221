@@ -11,12 +11,12 @@
 
 class Sort {
 protected:
-   unsigned long num_cmps; // number of comparisons performed in sort function
+   unsigned long long num_cmps; // number of comparisons performed in sort function
 public:
    virtual void sort(int A[], int size) = 0;    // main entry point
    bool testIfSorted(int A[], int size);        // returns false if not sorted
                                                 // true otherwise
-   unsigned long getNumCmps() { return num_cmps; }        // returns # of comparisons
+   unsigned long long getNumCmps() { return num_cmps; }        // returns # of comparisons
    void resetNumCmps() { num_cmps = 0; }
 };
 
